@@ -1641,16 +1641,20 @@ const TamgoTruckApp = () => {
     notify('success', 'Sesión cerrada.');
   };
 
-  const navButtons = [
-    { id: '1.1', label: '1.1 Onboarding' },
-    { id: '2.1', label: '2.1 Dashboard' },
-    { id: '3.1', label: '3.1 Nuevo Servicio' },
-    { id: '3.2', label: '3.2 Transportes' },
-    { id: '3.3', label: '3.3 WhatsApp' },
-    { id: '4.1', label: '4.1 Pago ECHEQ' },
-    { id: '4.2', label: '4.2 Combustible' },
-    { id: '5.1', label: '5.1 Panel Banco' },
-  ];
+const navButtons = [
+  { id: '1.1', label: '1.1 Onboarding' },
+  { id: '2.1', label: '2.1 Dashboard' },
+  { id: '3.1', label: '3.1 Nuevo Servicio', requiredType: 'shipper' },
+  { id: '3.2', label: '3.2 Transportes', requiredType: 'carrier' },
+  { id: '3.3', label: '3.3 WhatsApp', requiredType: 'carrier' },
+  { id: '4.1', label: '4.1 Pago ECHEQ', requiredType: 'shipper' },
+  { id: '4.2', label: '4.2 Combustible', requiredType: 'carrier' },
+  { id: '5.1', label: '5.1 Panel Banco' },
+];
+
+const visibleNavButtons = navButtons.filter(
+  (btn) => !btn.requiredType || !session || session.user.companyType === btn.requiredType
+);
 
   return (
     <div className="min-h-screen bg-paper flex flex-col font-sans">
@@ -1658,7 +1662,7 @@ const TamgoTruckApp = () => {
 
       <div className="bg-asphalt text-white px-4 py-3 flex flex-wrap gap-2 items-center shadow-md border-b-4 border-route">
         <div className="flex flex-wrap gap-2">
-          {navButtons.map((btn) => (
+          {visibleNavButtons.map((btn) => (
             <button
               key={btn.id}
               onClick={() => setCurrentScreen(btn.id)}
